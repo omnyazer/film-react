@@ -45,7 +45,6 @@ const App = () => {
   useEffect(() => {
     const fetchMovie = async () => {
       try {
-        setLoading(true);
         const res = await fetch("https://jsonfakery.com/movies/random/1");
         if (!res.ok) throw new Error(`Erreur HTTP ${res.status}`);
         const data = await res.json();
