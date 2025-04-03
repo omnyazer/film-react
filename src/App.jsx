@@ -4,7 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { addComment, removeComment } from "./redux/commentSlice";
-import { selectComments } from "./redux/selectors";
 import { Container, Form, Button, Card, Alert } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -29,7 +28,9 @@ const schema = yup.object().shape({
 
 const App = () => {
   const [movie, setMovie] = useState(null);
-  const comments = useSelector(selectComments);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const comments = useSelector((state) => state.comments.comments);
   const dispatch = useDispatch();
 
   const {
@@ -42,9 +43,12 @@ const App = () => {
   });
 
   useEffect(() => {
-    fetch("https://jsonfakery.com/movies/random/1")
-      .then((res) => res.json())
-      .then((data) => {
+    const fetchMovie = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("https://jsonfakery.com/movies/random/1");
+        if (!res.ok) throw new Error(`Erreur HTTP ${res.status}`);
+        const data = await res.json();
         const movieData = data[0];
         const transformedMovie = {
           title: movieData.original_title,
@@ -53,8 +57,15 @@ const App = () => {
           year: movieData.release_date || "Inconnue"
         };
         setMovie(transformedMovie);
-      })
-      .catch((err) => console.error("Erreur film :", err));
+      } catch (err) {
+        setError("Impossible de charger le film.");
+        console.error("Erreur film :", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovie();
   }, []);
 
   const onSubmit = (data) => {
@@ -70,7 +81,10 @@ const App = () => {
 
   return (
     <Container className="mt-4 container-centered">
-      {movie && (
+      {loading && <p>Chargement du film...</p>}
+      {error && <Alert variant="danger">{error}</Alert>}
+
+      {!loading && !error && movie && (
         <Card className="movie-card mb-4">
           {movie.poster && (
             <Card.Img
