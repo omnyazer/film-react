@@ -17,10 +17,10 @@ const schema = yup.object().shape({
 
   note: yup
     .number()
-    .typeError("Veuillez choisir une note entre 1 et 5")
-    .required("Veuillez choisir une note entre 1 et 5")
-    .min(1, "Veuillez choisir une note entre 1 et 5")
-    .max(5, "Veuillez choisir une note entre 1 et 5"),
+    .typeError("Veuillez sélectionner une note")
+    .required("Veuillez sélectionner une note")
+    .min(1, "Veuillez sélectionner une note")
+    .max(5, "Veuillez sélectionner une note"),
 
   acceptConditions: yup
     .boolean()
