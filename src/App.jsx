@@ -75,13 +75,8 @@ const App = () => {
         note: data.note
       })
     );
-    reset({
-      comment: "",
-      note: "",
-      acceptConditions: false
-    });
+    reset({ comment: "", note: "", acceptConditions: false });
   };
-  
 
   return (
     <Container className="mt-4 container-centered">
@@ -112,13 +107,21 @@ const App = () => {
       <Form onSubmit={handleSubmit(onSubmit)} className="mb-4">
         <Form.Group className="mb-3">
           <Form.Label>Ajouter un commentaire</Form.Label>
-          <Form.Control as="textarea" rows={3} {...register("comment")} />
-          {errors.comment && <p className="text-danger">{errors.comment.message}</p>}
+          <Form.Control
+            as="textarea"
+            rows={3}
+            {...register("comment")}
+            className={errors.comment ? "is-invalid" : ""}
+          />
+          {errors.comment && <div className="invalid-feedback">{errors.comment.message}</div>}
         </Form.Group>
 
         <Form.Group className="mb-3">
           <Form.Label>Note</Form.Label>
-          <Form.Select {...register("note")}>
+          <Form.Select
+            {...register("note")}
+            className={errors.note ? "is-invalid" : ""}
+          >
             <option value="">Sélectionnez une note</option>
             {[1, 2, 3, 4, 5].map((n) => (
               <option key={n} value={n}>
@@ -126,7 +129,7 @@ const App = () => {
               </option>
             ))}
           </Form.Select>
-          {errors.note && <p className="text-danger">{errors.note.message}</p>}
+          {errors.note && <div className="invalid-feedback">{errors.note.message}</div>}
         </Form.Group>
 
         <Form.Group className="mb-3">
@@ -134,9 +137,10 @@ const App = () => {
             type="checkbox"
             label="J'accepte les conditions générales"
             {...register("acceptConditions")}
+            className={errors.acceptConditions ? "is-invalid" : ""}
           />
           {errors.acceptConditions && (
-            <p className="text-danger">{errors.acceptConditions.message}</p>
+            <div className="invalid-feedback d-block">{errors.acceptConditions.message}</div>
           )}
         </Form.Group>
 
