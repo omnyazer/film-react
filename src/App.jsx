@@ -75,8 +75,13 @@ const App = () => {
         note: data.note
       })
     );
-    reset();
+    reset({
+      comment: "",
+      note: "",
+      acceptConditions: false
+    });
   };
+  
 
   return (
     <Container className="mt-4 container-centered">
